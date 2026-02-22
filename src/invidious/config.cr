@@ -54,6 +54,8 @@ struct ConfigPreferences
   property save_player_pos : Bool = false
   @[YAML::Field(ignore: true)]
   property default_playlist : String? = nil
+  property sponsorblock : Bool = true
+  property sponsorblock_options : String = ""
 
   def to_tuple
     {% begin %}

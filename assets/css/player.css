@@ -330,14 +330,21 @@ video.video-js {
 
 
 
-.sponsorblock-skip-segment {
+.sponsorblock-skip-segment, .sponsorblock-jump-segment {
   display: none;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10pt;
   font-size: 15pt;
   background: #000;
   border: 1px solid #FFF;
   padding: 5pt;
   cursor: pointer;
+}
+
+.sponsorblock-skip-segment {
+  right: 10pt;
+}
+
+.sponsorblock-jump-segment{
+  left: 10pt;
 }

@@ -145,6 +145,13 @@ module Invidious::Routes::PreferencesRoute
     notifications_only = notifications_only == "on"
 
     default_playlist = env.params.body["default_playlist"]?.try &.as(String)
+    # parse checkbox (on/off)
+    sponsorblock = env.params.body["sponsorblock"]?.try &.as(String)
+    sponsorblock ||= "off"
+    sponsorblock = sponsorblock == "on"
+
+    sponsorblock_options = env.params.body["sponsorblock_options"]?.try &.as(String) || ""
+
 
     # Convert to JSON and back again to take advantage of converters used for compatibility
     preferences = Preferences.from_json({
@@ -183,6 +190,9 @@ module Invidious::Routes::PreferencesRoute
       show_nick:                   show_nick,
       save_player_pos:             save_player_pos,
       default_playlist:            default_playlist,
+      sponsorblock:                sponsorblock,
+      sponsorblock_options:        sponsorblock_options,
+
     }.to_json)
 
     if user = env.get? "user"

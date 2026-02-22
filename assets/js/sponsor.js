@@ -1,4 +1,40 @@
+
+
 (async function(){
+
+	if(!video_data.preferences.sponsorblock) {
+		return ;
+	}
+
+	const logined = !!document.querySelector("input[value='Log out']");
+	function setCookie(name, value, days) {
+		let expires = "";
+		if (typeof days === "number") {
+			var date = new Date();
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			expires = "; expires=" + date.toUTCString();
+		}
+		// encode name and value
+		var cookie = encodeURIComponent(name) + "=" + encodeURIComponent(value || "") + expires + "; path=/";
+		document.cookie = cookie;
+	}
+
+	function getCookie(name) {
+		var ca = document.cookie.split(';');
+		for (var i = 0; i < ca.length; i++) {
+			var c = ca[i].trim();
+			var separatorIndex = c.indexOf('=');
+			if (separatorIndex === -1) continue;
+			// decode cookie name and value
+			var cookieName = decodeURIComponent(c.substring(0, separatorIndex));
+			var cookieValue = decodeURIComponent(c.substring(separatorIndex + 1));
+			if (cookieName === name) {
+				return cookieValue;
+			}
+		}
+		return null;
+	}
+
 	async function sha256First6(input) {
 		const encoder = new TextEncoder();
 		const data = encoder.encode(input);
@@ -12,7 +48,7 @@
 		sponsor: {
 			name: "Sponsor",
 			color: "#00D400",
-			action: 'skip',
+			action: 'manual',
 			index: 0
 		},
 		selfpromo: {
@@ -91,11 +127,49 @@
 		auto: "Auto Skip to the Start"
 	};
 
-	const options = {};
+	const optsEncodes = {
+		disabled: "a",
+		show: "b",
+		manual: "c",
+		skip: "d",
+		ask: "e",
+		auto: "f"
+	};
+
+	const optDecodes = {};
+
+	for(let [key,val] of Object.entries(optsEncodes)){
+		optDecodes[val] = key;
+	}
+
+	let options = {};
 
 	for(let [tag, opt] of Object.entries(categories)){
 		options[tag] = opt.action;
 	}
+
+	function decodeSave(str){
+		const opts = {};
+		if(str.length !== Object.keys(categories).length){
+			return options;
+		}
+		for(let [key,val] of Object.entries(categories)){
+			opts[key] = optDecodes[str[val.index]] ?? 'disabled'
+		}
+
+		return opts;
+	}
+
+	function encodeSave(opts){
+		const chars = new Array(Object.keys(categories));
+		for(let [key,val] of Object.entries(opts)){
+			const category = categories[key];
+			chars[category.index] = optsEncodes[val];
+		}
+		return chars.join('');
+	}
+
+	options = decodeSave(video_data.preferences.sponsorblock_options);
 
 	const hash = await sha256First6(video_data.id);
 	const actionTypes = ["skip","mute","chapter","full","poi"];
@@ -107,28 +181,19 @@
 	const res = await fetch(`/api/skipsegments/${hash}?${params}`).then(r => r.json());
 	const segs = (((res.filter(v => v.videoID === video_data.id)[0] ?? []).segments) ?? [])
 		.filter(seg => seg.category in categories);
+
+	const highlight = segs.filter(seg => seg.category === "poi_highlight")[0];
+	const highlightStart = highlight === undefined ? 0 : highlight.segment[0];
+
 	let first = true;
 	let seeking = false;
-	let lastSeg = null;
-	let segTime = 0;
-	let segTimer = null;
-	let allowSeg = null;
-	let seeked = false;
 
 	let skipTo = 0;
-	//let skips = segs.filter(seg => options[seg.category] === 'skip');
 	let interacts = [];
 
 	function loop(){
 		if(seeking){
-			return requestAnimationFrame(loop);
-		}
-
-		if(seeked && lastSeg !== null){
-			player.currentTime(segTime);
-			allowSeg = lastSeg;
-			seeked = false;
-			return requestAnimationFrame(loop);
+			return setTimeout(loop, 20);
 		}
 		
 		let ss = false;
@@ -140,49 +205,18 @@
 					ss = true;
 					break;
 				}
-
-				if(allowSeg === interact.UUID){
-					break;
-				} else {
-					allowSeg = null;
-				}
-
-				lastSeg = interact.UUID;
-				segTime = player.currentTime();
-				clearTimeout(segTimer);
-				segTimer = setTimeout(() => {
-					lastSeg = null;
-				}, 2000);
+				
 				player.currentTime(interact.segment[1]);
-
-
 				break;
 			}
 		}
 		skipSegment.style.display = ss ? 'block' : 'none';
-		
-		/*
-		for(let skip of skips){
-			if(skip.segment[0] < time && time < skip.segment[1]){
-				if(allowSeg === skip.UUID){
-					break;
-				} else {
-					allowSeg = null;
-				}
-
-				lastSeg = skip.UUID;
-				segTime = player.currentTime();
-				clearTimeout(segTimer);
-				segTimer = setTimeout(() => {
-					lastSeg = null;
-				}, 2000);
-				player.currentTime(skip.segment[1]);
-
-
-				break;
-			}
-		}*/
-		requestAnimationFrame(loop);
+		highlightSegment.style.display = (
+			time < highlightStart && 
+			options.poi_highlight === 'ask' &&
+			highlight
+		)  ? 'block' : 'none';
+		setTimeout(loop, 20);
 	}
 
 	function addMarkers(){
@@ -192,6 +226,7 @@
 		player.markers.add(
 			show.map(({segment, category}) => ({
 			time: segment[0],
+			breakOverlay:categories[category].name,
 			text: categories[category].name,
 			duration: (segment[1] - segment[0]) || 3,
 		})));
@@ -203,14 +238,27 @@
 			markers[i].style.borderRadius = 0;
 		}
 	}
-	player.on('playing',  () => {
+
+	const playing = !player.paused() && !player.ended() && player.currentTime() > 0;
+
+	function init() {
 		if(!first) return;
 		first = false;
 		player.markers();
 		addMarkers();
 
+		if(options.poi_highlight === 'auto' && highlight) {
+			player.currentTime(highlightStart);
+		}
+
 		loop();
-	});
+	}
+
+	if(playing){
+		init();
+	}
+	
+	player.on('playing',  init);
 
 	player.on('seeking', () => {
 		seeking = true;
@@ -221,10 +269,38 @@
 		seeked = true;
 	});
 	
-	function optionsUpDate(){
-		if(!first) return;
-		player.markers.reset([]);
-		addMarkers();
+	async function optionsUpDate(){
+		
+		try{
+			player.markers.reset([]);
+			addMarkers();
+		}catch{}
+	
+		const code = encodeSave(options);
+
+		if(logined){
+			const prefs = await fetch("/api/v1/auth/preferences").then(r => r.json());
+			await fetch("/api/v1/auth/preferences", {
+				method: 'POST',
+				headers: {
+					'Content-Type': "application/json",
+				},
+				body: JSON.stringify({
+					...prefs,
+					sponsorblock_options: code
+				}) 
+			})
+			return ;
+		}
+		let prefs = {};
+		try{
+			prefs = JSON.parse(getCookie("PREFS"));
+		} catch {}
+
+		setCookie("PREFS",JSON.stringify({
+			...prefs,
+			sponsorblock_options: code
+		}), 30);
 	}
 
 	function createElement(tag, parent, prepend) {
@@ -260,6 +336,12 @@
 		.setText('Skip Segment')
 		.setClick(() => player.currentTime(skipTo));
 	
+	const highlightSegment = createElement("div", document.querySelector('#player'))
+		.setClass("sponsorblock-jump-segment")
+		.setText('Jump to Highlight')
+		.setClick(() => player.currentTime(highlightStart));
+
+
 	let visible = false;
 	const wall = createElement("div", document.body)
 		.setClass("sponsorblock-options-wall")
@@ -296,7 +378,7 @@
 			option.value = tag;
 		}
 
-		select.value = val.action;
+		select.value = options[key];
 		((select, key) => {
 			select.onchange = () => {
 				options[key] = select.value;

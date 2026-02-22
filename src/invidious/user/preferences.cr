@@ -57,6 +57,9 @@ struct Preferences
   property volume : Int32 = CONFIG.default_user_preferences.volume
   property save_player_pos : Bool = CONFIG.default_user_preferences.save_player_pos
   property default_playlist : String? = nil
+  
+  property sponsorblock : Bool = CONFIG.default_user_preferences.sponsorblock
+  property sponsorblock_options : String = CONFIG.default_user_preferences.sponsorblock_options
 
   module BoolToString
     def self.to_json(value : String, json : JSON::Builder)

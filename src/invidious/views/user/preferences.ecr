@@ -45,7 +45,7 @@
             <div class="pure-control-group">
                 <label for="speed"><%= translate(locale, "preferences_speed_label") %></label>
                 <select name="speed" id="speed">
-                    <% {2.0, 1.75, 1.5, 1.25, 1.0, 0.75, 0.5, 0.25}.each do |option| %>
+                    <% {3.0, 2.75, 2.5, 2.25, 2.0, 1.75, 1.5, 1.25, 1.0, 0.75, 0.5, 0.25}.each do |option| %>
                         <option <% if preferences.speed == option %> selected <% end %>><%= option %></option>
                     <% end %>
                 </select>
@@ -138,6 +138,21 @@
                     </select>
                 </div>
             <% end %>
+
+            <div class="pure-control-group">
+                <label for="sponsorblock">SponsorBlock</label>
+                <input id="sponsorblock" type="checkbox" name="sponsorblock" <% if preferences.sponsorblock %>checked<% end %>>
+            </div>
+
+            <div class="pure-control-group">
+                <label for="sponsorblock_options">SponsorBlock options</label>
+                <input id="sponsorblock_options" type="text"
+                        name="sponsorblock_options"
+                        maxlength="20"
+                        value="<%= preferences.sponsorblock_options %>">
+                <small>(max 20 characters)</small>
+            </div>
+
 
             <legend><%= translate(locale, "preferences_category_visual") %></legend>
 
