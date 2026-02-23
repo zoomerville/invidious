@@ -27,7 +27,7 @@
     }.to_pretty_json
     %>
     </script>
-    <script src="/js/subscribe_widget.js?v=<%= ASSET_COMMIT %>"></script>
+    <script defer src="/js/subscribe_widget.js?v=<%= ASSET_COMMIT %>"></script>
 <% else %>
         <a id="subscribe" class="pure-button pure-button-primary"
             href="/login?referer=<%= env.get("current_page") %>">

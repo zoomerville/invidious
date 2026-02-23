@@ -182,7 +182,7 @@ we're going to need to do it here in order to allow for translations.
                     }.to_pretty_json
                     %>
                     </script>
-                    <script src="/js/playlist_widget.js?v=<%= Time.utc.to_unix_ms %>"></script>
+                    <script defer src="/js/playlist_widget.js?v=<%= Time.utc.to_unix_ms %>"></script>
                 <% end %>
             <% end %>
 
@@ -369,7 +369,8 @@ we're going to need to do it here in order to allow for translations.
         </div>
     <% end %>
 </div>
-<script src="/js/comments.js?v=<%= ASSET_COMMIT %>"></script>
-<script src="/js/sponsor.js?v=<%= ASSET_COMMIT %>"></script>
-<script src="/js/watch.js?v=<%= ASSET_COMMIT %>"></script>
+<script defer src="/js/comments.js?v=<%= ASSET_COMMIT %>"></script>
+<script defer src="/js/sha256.min.js?v=<%= ASSET_COMMIT %>"></script>
+<script defer src="/js/sponsor.js?v=<%= ASSET_COMMIT %>"></script>
+<script defer src="/js/watch.js?v=<%= ASSET_COMMIT %>"></script>
 

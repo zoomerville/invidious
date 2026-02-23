@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="/css/ionicons.min.css?v=<%= ASSET_COMMIT %>">
     <link rel="stylesheet" href="/css/default.css?v=<%= ASSET_COMMIT %>">
     <link rel="stylesheet" href="/css/carousel.css?v=<%= ASSET_COMMIT %>">
-    <script src="/js/_helpers.js?v=<%= ASSET_COMMIT %>"></script>
+    <script defer src="/js/_helpers.js?v=<%= ASSET_COMMIT %>"></script>
 </head>
 
 <body class="<%= dark_mode.blank? ? "no" : dark_mode %>-theme">
@@ -174,10 +174,10 @@
 
         </div>
     </div>
-    <script src="/js/handlers.js?v=<%= ASSET_COMMIT %>"></script>
-    <script src="/js/themes.js?v=<%= ASSET_COMMIT %>"></script>
+    <script defer src="/js/handlers.js?v=<%= ASSET_COMMIT %>"></script>
+    <script defer src="/js/themes.js?v=<%= ASSET_COMMIT %>"></script>
     <% if env.get? "user" %>
-        <script src="/js/sse.js?v=<%= ASSET_COMMIT %>"></script>
+        <script defer src="/js/sse.js?v=<%= ASSET_COMMIT %>"></script>
         <script id="notification_data" type="application/json">
         <%=
         {
@@ -187,7 +187,7 @@
         %>
         </script>
         <% if CONFIG.enable_user_notifications %>
-        <script src="/js/notifications.js?v=<%= ASSET_COMMIT %>"></script>
+        <script defer src="/js/notifications.js?v=<%= ASSET_COMMIT %>"></script>
         <% end %>
     <% end %>
 </body>

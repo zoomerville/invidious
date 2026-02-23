@@ -54,7 +54,7 @@
 }.to_pretty_json
 %>
 </script>
-<script src="/js/watched_widget.js"></script>
+<script defer src="/js/watched_widget.js"></script>
 
 
 <div class="pure-g">
@@ -63,7 +63,7 @@
 <% end %>
 </div>
 
-<script src="/js/watched_indicator.js"></script>
+<script defer src="/js/watched_indicator.js"></script>
 
 <%=
   IV::Frontend::Pagination.nav_numeric(locale,

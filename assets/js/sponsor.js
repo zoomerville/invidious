@@ -35,13 +35,8 @@
 		return null;
 	}
 
-	async function sha256First6(input) {
-		const encoder = new TextEncoder();
-		const data = encoder.encode(input);
-		const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-		const hashArray = Array.from(new Uint8Array(hashBuffer));
-		const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-		return hashHex.slice(0, 6);
+	function sha256First6(input) {
+		return sha256(input).slice(0, 6);
 	}
 
 	const categories = {
@@ -171,7 +166,7 @@
 
 	options = decodeSave(video_data.preferences.sponsorblock_options);
 
-	const hash = await sha256First6(video_data.id);
+	const hash = sha256First6(video_data.id);
 	const actionTypes = ["skip","mute","chapter","full","poi"];
 	const params = new URLSearchParams({
 		actionTypes: JSON.stringify(actionTypes),

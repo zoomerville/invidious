@@ -62,7 +62,7 @@ RUN --mount=type=cache,target=/root/.cache/crystal if [[ "${release}" == 1 ]] ; 
     fi
 
 FROM alpine:3.23
-RUN apk add --no-cache rsvg-convert ttf-opensans tini tzdata
+RUN apk add --no-cache rsvg-convert ttf-opensans tini tzdata minify
 WORKDIR /invidious
 RUN addgroup -g 1000 -S invidious && \
     adduser -u 1000 -S invidious -G invidious
@@ -73,6 +73,10 @@ COPY ./config/sql/ ./config/sql/
 COPY ./locales/ ./locales/
 COPY --from=builder /invidious/assets ./assets/
 COPY --from=builder /invidious/invidious .
+RUN find ./assets -type f \( -name "*.js" -o -name "*.css" \) \
+    ! -name "*.min.*" \
+    -exec sh -c 'minify "$1" > "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
+
 RUN chmod o+rX -R ./assets ./config ./locales
 
 EXPOSE 3000
