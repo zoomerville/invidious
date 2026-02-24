@@ -311,6 +311,7 @@
 			return child;
 		};
 
+		child.setHTML = v => child.setAttr("innerHTML", v);
 		child.setText = v => child.setAttr("textContent", v);
 		child.setClass = v => child.setAttr("className", v);
 		child.setValue = v => child.setAttr("value", v);
@@ -353,7 +354,9 @@
 
 	const form = createElement("form", settings);
 	createElement("h1", form)
-		.setText("SponserBlock Settings");
+		.setText("SponserSkip Settings");
+	createElement("p", form)
+		.setHTML("Data from <a href='https://sponsor.ajay.app/' target='_blank'>SponsorBlock</a>");
 
 	for (let [key, val] of Object.entries(categories)) {
 		const field = createElement("fieldset", form);
@@ -385,7 +388,7 @@
 	const hbox = document.querySelectorAll('.pure-u-1.pure-u-lg-1-5 .h-box')[0];
 	const span = createElement("p", hbox, true)
 	createElement("a", span)
-		.setText("SponserBlock Settings")
+		.setText("SponserSkip Settings")
 		.setAttr("href", "#")
 		.setClick(e => {
 			e.preventDefault()

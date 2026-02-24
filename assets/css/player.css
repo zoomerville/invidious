@@ -293,8 +293,12 @@ video.video-js {
   margin: 10pt 10pt;
 }
 
-.sponsorblock-settings h1 {
+.sponsorblock-settings h1 ,.sponsorblock-settings p{
   margin: 10pt;
+}
+
+.sponsorblock-settings a, .sponsorblock-settings a:visited, .sponsorblock-settings a:active{
+  color: #ADD8E6;
 }
 
 .sponsorblock-settings select {
