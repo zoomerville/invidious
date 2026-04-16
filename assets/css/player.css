@@ -352,3 +352,22 @@ video.video-js {
 .sponsorblock-jump-segment{
   left: 10pt;
 }
+
+.rating-box{
+  width: fit-content;
+}
+
+.rating-box .rating-likes{
+  margin-right: 5pt;
+}
+
+.rating-box i {
+  margin: 0 3pt;
+}
+
+.rating-bar {
+  display: block;
+  margin-top: 4pt;
+  height: 3pt;
+  width: 100%;
+}
