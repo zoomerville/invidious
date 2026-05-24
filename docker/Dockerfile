@@ -1,8 +1,8 @@
-# https://github.com/openssl/openssl/releases/tag/openssl-3.5.2
-ARG OPENSSL_VERSION='3.5.2'
-ARG OPENSSL_SHA256='c53a47e5e441c930c3928cf7bf6fb00e5d129b630e0aa873b08258656e7345ec'
+# https://github.com/openssl/openssl/releases/tag/openssl-3.6.2
+ARG OPENSSL_VERSION='3.6.2'
+ARG OPENSSL_SHA256='aaf51a1fe064384f811daeaeb4ec4dce7340ec8bd893027eee676af31e83a04f'
 
-FROM crystallang/crystal:1.16.3-alpine AS dependabot-crystal
+FROM crystallang/crystal:1.20.2-alpine AS dependabot-crystal
 
 # We compile openssl ourselves due to a memory leak in how crystal interacts
 # with openssl
@@ -43,7 +43,7 @@ COPY ./assets/ ./assets/
 COPY ./videojs-dependencies.yml ./videojs-dependencies.yml
 
 RUN crystal spec --warnings all \
-    --link-flags "-lxml2 -llzma"    
+    --link-flags "-lxml2 -llzma"
 
 ARG OPENSSL_VERSION
 COPY --from=openssl-builder /openssl-${OPENSSL_VERSION} /openssl-${OPENSSL_VERSION}
