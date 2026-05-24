@@ -140,34 +140,16 @@
             <% end %>
 
             <div class="pure-control-group">
-                <label for="sponsorblock">SponsorBlock</label>
+                <label for="sponsorblock">SponsorSkip:</label>
                 <input id="sponsorblock" type="checkbox" name="sponsorblock" <% if preferences.sponsorblock %>checked<% end %>>
             </div>
 
             <div class="pure-control-group">
-                <label for="sponsorblock_options">SponsorBlock options</label>
-                <input id="sponsorblock_options" type="text"
+                <input id="sponsorblock_options" type="hidden"
                         name="sponsorblock_options"
                         maxlength="20"
                         value="<%= preferences.sponsorblock_options %>">
-                <small>(max 20 characters)</small>
             </div>
-
-
-            <div class="pure-control-group">
-                <label for="sponsorblock">SponsorBlock</label>
-                <input id="sponsorblock" type="checkbox" name="sponsorblock" <% if preferences.sponsorblock %>checked<% end %>>
-            </div>
-
-            <div class="pure-control-group">
-                <label for="sponsorblock_options">SponsorBlock options</label>
-                <input id="sponsorblock_options" type="text"
-                        name="sponsorblock_options"
-                        maxlength="20"
-                        value="<%= preferences.sponsorblock_options %>">
-                <small>(max 20 characters)</small>
-            </div>
-
 
             <legend><%= I18n.translate(locale, "preferences_category_visual") %></legend>
             <div class="pure-control-group">
