@@ -95,6 +95,10 @@
 
 ## Quick start
 
+**Repo requires external server configs to run properly. Check external-config-example/ folder**
+
+You need to change the socks host,username and password to run properly
+
 **Using Invidious:**
 
 - [Select a public instance from the list](https://instances.invidious.io) and start watching videos right now!

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Too Many Requests</title>
+
+  <!-- Redirect after 10 seconds -->
+  <meta http-equiv="refresh" content="10;url=/" />
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    html,body {
+      height: 100%;
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: #0f172a;
+      color: #e6eef8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      max-width: 720px;
+      width: 90%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      text-align: center;
+      line-height: 1.4;
+    }
+    h1 { margin: 0 0 8px; font-size: 1.6rem; color: #ffd7a8; }
+    p { margin: 8px 0; color: #cfe6ff; }
+    .count { font-weight: 700; font-size: 1.2rem; color: #ffb4c6; }
+    a.home { color: #7dd3fc; text-decoration: underline; }
+    footer { margin-top: 14px; font-size: 0.9rem; color: #9fb9d9; }
+  </style>
+</head>
+<body>
+  <div class="card" role="alert">
+    <h1>Stop hacking people — M'kay!</h1>
+
+    <p>IP ban will expire in <strong>15 minutes</strong>.</p>
+
+    <p>
+      Redirecting you to the
+      <a class="home" href="/" title="Go to homepage">homepage</a>
+      in <span class="count">10</span> seconds.
+    </p>
+  </div>
+</body>
+</html>
