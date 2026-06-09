@@ -60,6 +60,7 @@ struct Preferences
   
   property sponsorblock : Bool = CONFIG.default_user_preferences.sponsorblock
   property sponsorblock_options : String = CONFIG.default_user_preferences.sponsorblock_options
+  property search_privacy : Bool = CONFIG.default_user_preferences.search_privacy
 
   module BoolToString
     def self.to_json(value : String, json : JSON::Builder)

@@ -56,6 +56,7 @@ struct ConfigPreferences
   property default_playlist : String? = nil
   property sponsorblock : Bool = true
   property sponsorblock_options : String = ""
+  property search_privacy : Bool = false
 
   def to_tuple
     {% begin %}
@@ -122,6 +123,8 @@ class Config
   property hmac_key : String = ""
   # Domain to be used for links to resources on the site where an absolute URL is required
   property domain : String?
+  # Additional domain list that is going to be used for cookie domain validation
+  property alternative_domains : Array(String) = [] of String
   # Subscribe to channels using PubSubHubbub (requires domain, hmac_key)
   property use_pubsub_feeds : Bool | Int32 = false
   property popular_enabled : Bool = true
