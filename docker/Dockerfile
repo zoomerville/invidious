@@ -62,7 +62,9 @@ RUN --mount=type=cache,target=/root/.cache/crystal if [[ "${release}" == 1 ]] ; 
     fi
 
 FROM alpine:3.24
-RUN apk add --no-cache rsvg-convert ttf-opensans tini tzdata minify
+RUN apk add --no-cache rsvg-convert ttf-opensans tini tzdata minify nodejs npm
+RUN npm install -g terser
+
 WORKDIR /invidious
 RUN addgroup -g 1000 -S invidious && \
     adduser -u 1000 -S invidious -G invidious
@@ -73,10 +75,14 @@ COPY ./config/sql/ ./config/sql/
 COPY ./locales/ ./locales/
 COPY --from=builder /invidious/assets ./assets/
 COPY --from=builder /invidious/invidious .
-RUN find ./assets -type f \( -name "*.js" -o -name "*.css" \) \
+RUN find ./assets -type f -name "*.css" \
     ! -name "*.min.*" \
     -exec sh -c 'minify "$1" > "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
 
+RUN find ./assets -type f -name "*.js" \
+    ! -name "*.min.*" \
+    -exec sh -c 'terser "$1" --compress --mangle -o "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
+    
 RUN chmod o+rX -R ./assets ./config ./locales
 
 EXPOSE 3000
