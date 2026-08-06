@@ -2,6 +2,135 @@
 
 ## vX.Y.0 (future)
 
+
+
+
+## v2.20260804.1
+
+### Wrap-up
+
+This patch release fixes a regression in the OCI (container) build that omitted debug information, making it harder to diagnose issues in production. The fix ensures that the `-no-pie` link flag is passed correctly, restoring debug symbols for better stack traces and crash analysis.
+
+No new features are included in this release; it is solely focused on improving the debuggability of containerized instances.
+
+### Bugs fixed
+#### For instance owners
+  - Debug information is now included again in OCI images by passing the `-no-pie` link flag correctly (#5895)
+
+### Full list of pull requests merged since the last release (newest first)
+
+* fix: pass `-no-pie` link flag argument to include debug information again for OCI (https://github.com/iv-org/invidious/pull/5895, by @Fijxu)
+* Release v2.20260804.0 (https://github.com/iv-org/invidious/pull/5893, by @github-actions[bot])
+
+## v2.20260804.0
+
+### Wrap-up
+
+This release focuses on fixing comment rendering, adding new configuration options for instance owners, and streamlining developer tooling. Comments in videos and community posts now render correctly again, a message appears when comments are disabled, and several new locales were made available to users.
+
+Instance owners gain SOCKS5 proxy support and the ability to set the videojs max buffer length via config.yml. Developer experience improves with Nix development files, a pinned Crystal version for linting, and an updated AI policy that properly bans AI slop.
+
+### New features & important changes
+#### For Users
+  - A message is now shown when comments are turned off (#4051)
+  - New locales translated at more than 20% are now made available to users, this includes Belarusian, Galician, Swiss German, Armenian, Latvian and Uzbek (#5891, #5882)
+
+#### For instance owners
+  - SOCKS5 proxy support was added (#5865)
+  - The videojs max buffer length can now be set via config.yml (#5876)
+
+#### For developers
+  - Nix development files were added (#5856, #5861)
+  - The Makefile no longer uses the deprecated `-Dpreview_mt` flag (#5872)
+  - Crystal was pinned to 1.20.3 for the linting task so Ameba can build (#5859)
+  - The release script now uses deepseek/deepseek-v4-flash-0731 (#5886)
+  - The AI policy was updated to properly ban AI slop (#5849)
+  - The awesome humane tech badge was removed (#5853)
+  - Development dependencies were excluded from the CI build job (#5860)
+  - CI dependencies were bumped: `actions/stale` to 11 and `actions/setup-python` to 7 (#5890, #5829)
+
+### Bugs fixed
+#### User-side
+  - Rendered links and timestamps in video descriptions were fixed (#5878)
+  - Comments HTML rendering was fixed (#5862)
+  - Comments in community posts were fixed (#5874)
+  - Non-comment `commentFilterContextViewModel` keys are now skipped in comments (#5870)
+
+### Full list of pull requests merged since the last release (newest first)
+
+* CI: Exclude development dependencies from build job (https://github.com/iv-org/invidious/pull/5860, by @Fijxu)
+* Enable the Uzbek since it's been translated at more than 20% (https://github.com/iv-org/invidious/pull/5891, by @TheFrenchGhosty)
+* Translations update from Hosted Weblate (https://github.com/iv-org/invidious/pull/5881, by @weblate)
+* Switch to deepseek/deepseek-v4-flash-0731 for the release script (https://github.com/iv-org/invidious/pull/5886, by @TheFrenchGhosty)
+* chore(deps): bump actions/stale from 10 to 11 (https://github.com/iv-org/invidious/pull/5890, by @dependabot[bot])
+* feat: add support for SOCKS5 proxy (https://github.com/iv-org/invidious/pull/5865, by @unixfox)
+* feat: allow setting videojs max buffer length via config.yml (https://github.com/iv-org/invidious/pull/5876, by @Fijxu)
+* fix: fix rendered links and timestamps in video descriptions (https://github.com/iv-org/invidious/pull/5878, by @Fijxu)
+* Show message when comments are turned off (https://github.com/iv-org/invidious/pull/4051, by @syeopite)
+* Enable the new locales translated at more than 20% (https://github.com/iv-org/invidious/pull/5882, by @TheFrenchGhosty)
+* fix: also fix comments in community posts (https://github.com/iv-org/invidious/pull/5874, by @Fijxu)
+* chore: remove `-Dpreview_mt` from Makefile as it has been deprecated by the Crystal compiler. (https://github.com/iv-org/invidious/pull/5872, by @Fijxu)
+* Translations update from Hosted Weblate (https://github.com/iv-org/invidious/pull/5474, by @weblate)
+* fix: skip non comment `commentFilterContextViewModel` key in comments (https://github.com/iv-org/invidious/pull/5870, by @Fijxu)
+* fix: fix comments html rendering (https://github.com/iv-org/invidious/pull/5862, by @Fijxu)
+* chore: Move nix files out of root directory (https://github.com/iv-org/invidious/pull/5861, by @Fijxu)
+* CI: Pin Crystal to 1.20.3 for linting task so ameba can build (https://github.com/iv-org/invidious/pull/5859, by @Fijxu)
+* chore: Add Nix development files (https://github.com/iv-org/invidious/pull/5856, by @Fijxu)
+* Remove the awesome humane tech badge (https://github.com/iv-org/invidious/pull/5853, by @TheFrenchGhosty)
+* Update the AI policy to properly ban AI slop (https://github.com/iv-org/invidious/pull/5849, by @TheFrenchGhosty)
+* chore(deps): bump actions/setup-python from 5 to 7 (https://github.com/iv-org/invidious/pull/5829, by @dependabot[bot])
+
+## v2.20260723.0
+
+### Wrap-up
+
+This release hardens security, adds an instance option to disable API endpoints, and fixes YouTube backend changes that broke video metadata and playback. A cross-user playlist deletion vulnerability was closed, and videos are no longer incorrectly marked as upcoming.
+
+Instance owners gain a new configuration flag to disable API endpoints that are easy to abuse, a reduced backoff in the channel refresh job when no errors occur, and an updated User-Agent header for YouTube requests. The OCI image bumps OpenSSL to 3.6.3, and the Docker image moves to Crystal 1.20.3.
+
+Developer experience improves with the ability to release directly from GitHub Actions, enhanced issue/PR templates with an AI policy compliance field, and a new `AI_POLICY.md` document. Dependency bumps keep CI current with `int128/docker-manifest-create-action` 2.25.0 and `actions/cache` 6.
+
+### New features & important changes
+#### For Users
+  - No user-facing changes in this release.
+
+#### For instance owners
+  - A new configuration option allows disabling API endpoints that are easy to abuse (#5630)
+  - The `RefreshChannelsJob` backoff is reduced when no errors occur, improving channel refresh efficiency (#5759)
+  - The User-Agent header for YouTube requests was updated to maintain compatibility (#5794)
+  - OpenSSL was updated to 3.6.3 in the OCI image (#5808)
+  - The Docker image now uses Crystal 1.20.3 (#5797)
+
+#### For developers
+  - Releases can now be triggered directly from a GitHub Action workflow (#5823)
+  - Issue and PR templates were reworded and enhanced, and a field for AI policy compliance was added (#5804, #5803)
+  - An `AI_POLICY.md` document was created to clarify the project's stance on AI-generated contributions (#5791)
+  - CI dependencies were bumped: `int128/docker-manifest-create-action` to 2.25.0 and `actions/cache` to 6 (#5807, #5793)
+
+### Bugs fixed
+#### User-side
+  - A security issue that allowed playlist deletion across different users was fixed (#5790)
+  - Videos are no longer incorrectly labelled as `isUpcoming = true` due to a YouTube backend change (#5800)
+  - YouTube backend API changes that caused playback and metadata issues were addressed (#5818, #5819)
+
+### Full list of pull requests merged since the last release (newest first)
+
+* feat: add ability to release from github action (https://github.com/iv-org/invidious/pull/5823, by @unixfox)
+* youtube backend api fix (https://github.com/iv-org/invidious/pull/5818, by @gabe4278)
+* Hotfix - Fix YouTube change (https://github.com/iv-org/invidious/pull/5819, by @bunchy7ss)
+* chore: update openssl to 3.6.3 in OCI (https://github.com/iv-org/invidious/pull/5808, by @Fijxu)
+* chore(deps): bump int128/docker-manifest-create-action from 2.22.0 to 2.25.0 (https://github.com/iv-org/invidious/pull/5807, by @dependabot[bot])
+* Various enhancements and rewording to the issues/PRs templates (https://github.com/iv-org/invidious/pull/5804, by @TheFrenchGhosty)
+* Add a field for AI policy compliance in the issues/PRs templates (https://github.com/iv-org/invidious/pull/5803, by @TheFrenchGhosty)
+* Fix videos being incorrectly labelled as isUpcoming = true (https://github.com/iv-org/invidious/pull/5800, by @absidue)
+* chore(deps): bump 84codes/crystal from 1.20.2-alpine to 1.20.3-alpine in /docker (https://github.com/iv-org/invidious/pull/5797, by @dependabot[bot])
+* Create AI_POLICY.md (https://github.com/iv-org/invidious/pull/5791, by @TheFrenchGhosty)
+* Add option to disable easy to abuse API endpoints (https://github.com/iv-org/invidious/pull/5630, by @Fijxu)
+* [RefreshChannelsJob] Reduce backoff if no errors occur (https://github.com/iv-org/invidious/pull/5759, by @unrealtournament)
+* fix: security issue playlist deletion cross user (https://github.com/iv-org/invidious/pull/5790, by @unixfox)
+* chore: update User-Agent header for Youtube requests (https://github.com/iv-org/invidious/pull/5794, by @Fijxu)
+* chore(deps): bump actions/cache from 5 to 6 (https://github.com/iv-org/invidious/pull/5793, by @dependabot[bot])
+
 ## v2.20260626.0
 
 ### Wrap-up
